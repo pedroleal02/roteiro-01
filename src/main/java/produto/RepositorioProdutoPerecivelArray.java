@@ -42,8 +42,11 @@ public class RepositorioProdutoPerecivelArray {
 	 * @return
 	 */
 	private int procurarIndice(int codigo) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		int retorno = -1;
+		for (int i = 0; i < produtos.length; i++) {
+			if (produtos[i].getCodigo() == codigo) retorno = i; // MINHA IMPLEMENTAÇÃO
+		}
+		return retorno;
 	}
 
 	/**
@@ -53,16 +56,18 @@ public class RepositorioProdutoPerecivelArray {
 	 * @return
 	 */
 	public boolean existe(int codigo) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		boolean condicao = false;
+		for (int i = 0; i < produtos.length; i++) {
+			if (produtos[i].getCodigo() == codigo) condicao = true; // MINHA IMPLEMENTAÇÃO
+		}
+		return condicao;
 	}
 
 	/**
 	 * Insere um novo produto (sem se preocupar com duplicatas)
 	 */
 	public void inserir(ProdutoPerecivel produto) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		produtos[++index] = produto; // MINHA IMPLEMENTAÇÃO
 	}
 
 	/**
@@ -71,8 +76,11 @@ public class RepositorioProdutoPerecivelArray {
 	 * utilizado.
 	 */
 	public void atualizar(ProdutoPerecivel produto) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		if (existe(produto.getCodigo())) {
+			produtos[procurarIndice(produto.getCodigo())] = produto; // MINHA IMPLEMENTAÇÃO
+		} else {
+			throw new IllegalArgumentException("Produto não está no array");
+		}
 	}
 
 	/**
@@ -83,8 +91,8 @@ public class RepositorioProdutoPerecivelArray {
 	 * @param codigo
 	 */
 	public void remover(int codigo) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		produtos[procurarIndice(codigo)] = null; // MINHA IMPLEMENTACAO
+		index--;
 	}
 
 	/**
@@ -95,7 +103,10 @@ public class RepositorioProdutoPerecivelArray {
 	 * @return
 	 */
 	public ProdutoPerecivel procurar(int codigo) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		if (existe(codigo)) {
+			return produtos[procurarIndice(codigo)];
+		} else {
+			throw new IllegalArgumentException("Produto não está no array");
+		}
 	}
 }

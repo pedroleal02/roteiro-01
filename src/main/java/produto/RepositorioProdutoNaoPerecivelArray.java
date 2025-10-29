@@ -68,7 +68,7 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * Insere um novo produto (sem se preocupar com duplicatas)
 	 */
 	public void inserir(ProdutoNaoPerecivel produto) {
-		produtos[++index] = produto; 
+		produtos[++index] = produto; // MINHA IMPLEMENTACAO 
 	}
 
 	/**
@@ -77,8 +77,12 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * utilizado.
 	 */
 	public void atualizar(ProdutoNaoPerecivel produto) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		if (!existe(produto.getCodigo())) {
+			throw new IllegalArgumentException("Produto não está no array"); // MINHA IMPLEMENTACAO
+		} else {
+			int indice = procurarIndice(produto.getCodigo());
+			produtos[indice] = produto;
+		}
 	}
 
 	/**
@@ -89,8 +93,8 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * @param codigo
 	 */
 	public void remover(int codigo) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		int indice = procurarIndice(codigo);
+		produtos[indice--] = null; // MINHA IMPLEMENTAÇÃO
 	}
 
 	/**
@@ -101,8 +105,10 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * @return
 	 */
 	public ProdutoNaoPerecivel procurar(int codigo) {
-		// TODO Implement your code here
-		throw new UnsupportedOperationException("Not implemented yet!");
+		for (ProdutoNaoPerecivel produto : produtos) {
+			if (produto.getCodigo() == codigo) return produto;
+		}
+		throw new IllegalArgumentException("Poduto não está no array");
 	}
 
 }

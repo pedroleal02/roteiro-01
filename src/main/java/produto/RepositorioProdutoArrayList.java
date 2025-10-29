@@ -40,14 +40,12 @@ public class RepositorioProdutoArrayList {
 	 * @return
 	 */
 	private int procurarIndice(int codigo) {
-		// TODO Implement your code here
-		int resultado = -1;
-		for (int i = 0; i < produtos.size(); i++) { // MINHA IMPLEMENTAÇÃO
-			if (produtos.get(i) == (Object) codigo) { // essa é a melhor implementação?
-				resultado = i;
-			}
+		int retorno = -1;
+		for (int i = 0; i < produtos.size(); i++) {
+			ProdutoNaoPerecivel prod = (ProdutoNaoPerecivel) produtos.get(i);
+			if (prod.getCodigo() == codigo) retorno = i;
 		}
-		return resultado;
+		return retorno;
 	}
 
 	/**
@@ -57,7 +55,7 @@ public class RepositorioProdutoArrayList {
 	 * @return
 	 */
 	public boolean existe(int codigo) {
-		return produtos.contains(codigo); // MINHA IMPLEMENTAÇÃO 
+		return produtos.contains(codigo);
 	}
 
 	/**
@@ -65,7 +63,7 @@ public class RepositorioProdutoArrayList {
 	 */
 	public void inserir(Produto produto) {
 		
-		produtos.add(produto); // MINHA IMPLEMENTAÇÃO
+		produtos.add(produto);
 
 	}
 
@@ -75,13 +73,12 @@ public class RepositorioProdutoArrayList {
 	 * utilizado.
 	 */
 	public void atualizar(Produto produto) {
-		if (produtos.contains(produto)) {
+		if (existe(produto.getCodigo())) {
 			produtos.remove(produto);
-			produtos.add(produto); // MINHA IMPLEMENTACAO
+			produtos.add(produto);
 		} else {
-			throw new IllegalArgumentException("Produto não está no array");
+			throw new IllegalArgumentException("O produto não está no array");
 		}
-		
 	}
 
 	/**
@@ -92,9 +89,13 @@ public class RepositorioProdutoArrayList {
 	 * @param codigo
 	 */
 	public void remover(int codigo) {
+		if (existe(codigo)) {
+			ProdutoNaoPerecivel prod = (ProdutoNaoPerecivel) produtos.get(procurarIndice(codigo));
+			produtos.remove(prod);
+		} else {
+			throw new IllegalArgumentException("O produto não está no array");
+		}
 		
-		produtos.remove(codigo); // MINHA IMPLEMENTACAO
-
 	}
 
 	/**
@@ -105,6 +106,11 @@ public class RepositorioProdutoArrayList {
 	 * @return
 	 */
 	public Produto procurar(int codigo) {
-		return (Produto) produtos.get(codigo); // MINHA IMPLEMENTACAO
+		if (existe(codigo)) {
+			ProdutoNaoPerecivel prod = (ProdutoNaoPerecivel) produtos.get(procurarIndice(codigo));
+			return prod;
+		} else {
+			throw new IllegalArgumentException("O produto não está no array");
+		}
 	}
 }
