@@ -17,17 +17,17 @@ public class RepositorioProdutoArrayList {
 	 * A estrutura onde os produtos sao mantidos. Voce nao precisa se preocupar
 	 * por enquanto com o uso de generics em ArrayList.
 	 */
-	private ArrayList produtos;
+	private ArrayList<Produto> produtos;
 
 	/**
 	 * A posicao do ultimo elemento inserido no array de produtos. o valor
 	 * inicial é -1 para indicar que nenhum produto foi ainda guardado no array.
 	 */
-	private int index = -1;
+	//private int index = -1;
 
 	public RepositorioProdutoArrayList(int size) {
 		super();
-		this.produtos = new ArrayList();
+		this.produtos = new ArrayList<>();
 	}
 
 	/**
@@ -41,9 +41,13 @@ public class RepositorioProdutoArrayList {
 	 */
 	private int procurarIndice(int codigo) {
 		int retorno = -1;
-		for (int i = 0; i < produtos.size(); i++) {
-			ProdutoNaoPerecivel prod = (ProdutoNaoPerecivel) produtos.get(i);
-			if (prod.getCodigo() == codigo) retorno = i;
+		boolean condicao = false;
+		for (int i = 0; i < produtos.size() && !condicao; i++) {
+			Produto prod = produtos.get(i);
+			if (prod.getCodigo() == codigo) {
+				retorno = i;
+				condicao = true;
+			}
 		}
 		return retorno;
 	}
@@ -55,16 +59,16 @@ public class RepositorioProdutoArrayList {
 	 * @return
 	 */
 	public boolean existe(int codigo) {
-		return produtos.contains(codigo);
+		boolean condicao = false;
+		if (procurarIndice(codigo) != -1) condicao = true;
+		return condicao;
 	}
 
 	/**
 	 * Insere um novo produto (sem se preocupar com duplicatas)
 	 */
 	public void inserir(Produto produto) {
-		
 		produtos.add(produto);
-
 	}
 
 	/**
@@ -73,11 +77,11 @@ public class RepositorioProdutoArrayList {
 	 * utilizado.
 	 */
 	public void atualizar(Produto produto) {
-		if (existe(produto.getCodigo())) {
-			produtos.remove(produto);
-			produtos.add(produto);
+		int indice = procurarIndice(produto.getCodigo());
+		if (indice != -1) {
+			produtos.set(indice, produto);
 		} else {
-			throw new IllegalArgumentException("O produto não está no array");
+			throw new RuntimeException();
 		}
 	}
 
@@ -89,11 +93,11 @@ public class RepositorioProdutoArrayList {
 	 * @param codigo
 	 */
 	public void remover(int codigo) {
-		if (existe(codigo)) {
-			ProdutoNaoPerecivel prod = (ProdutoNaoPerecivel) produtos.get(procurarIndice(codigo));
-			produtos.remove(prod);
+		int indice = procurarIndice(codigo);
+		if (indice != -1) {
+			produtos.remove(indice);
 		} else {
-			throw new IllegalArgumentException("O produto não está no array");
+			throw new RuntimeException();
 		}
 		
 	}
@@ -106,11 +110,13 @@ public class RepositorioProdutoArrayList {
 	 * @return
 	 */
 	public Produto procurar(int codigo) {
-		if (existe(codigo)) {
-			ProdutoNaoPerecivel prod = (ProdutoNaoPerecivel) produtos.get(procurarIndice(codigo));
-			return prod;
+		int indice = procurarIndice(codigo);
+		Produto saida;
+		if (indice != -1) {
+			saida = produtos.get(indice);
 		} else {
-			throw new IllegalArgumentException("O produto não está no array");
+			throw new RuntimeException();
 		}
+		return saida;
 	}
 }

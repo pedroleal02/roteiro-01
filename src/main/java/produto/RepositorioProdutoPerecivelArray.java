@@ -43,8 +43,12 @@ public class RepositorioProdutoPerecivelArray {
 	 */
 	private int procurarIndice(int codigo) {
 		int retorno = -1;
-		for (int i = 0; i < produtos.length; i++) {
-			if (produtos[i].getCodigo() == codigo) retorno = i; // MINHA IMPLEMENTAÇÃO
+		boolean condicao = false;
+		for (int i = 0; i < produtos.length && !condicao; i++) {
+			if (produtos[i] != null && produtos[i].getCodigo() == codigo) {
+				retorno = i;
+				condicao = true;
+			}
 		}
 		return retorno;
 	}
@@ -57,8 +61,8 @@ public class RepositorioProdutoPerecivelArray {
 	 */
 	public boolean existe(int codigo) {
 		boolean condicao = false;
-		for (int i = 0; i < produtos.length; i++) {
-			if (produtos[i].getCodigo() == codigo) condicao = true; // MINHA IMPLEMENTAÇÃO
+		for (int i = 0; i < produtos.length && !condicao; i++) {
+			if (produtos[i] != null && produtos[i].getCodigo() == codigo) condicao = true;
 		}
 		return condicao;
 	}
@@ -67,7 +71,10 @@ public class RepositorioProdutoPerecivelArray {
 	 * Insere um novo produto (sem se preocupar com duplicatas)
 	 */
 	public void inserir(ProdutoPerecivel produto) {
-		produtos[++index] = produto; // MINHA IMPLEMENTAÇÃO
+		if ((index+1) < produtos.length) {
+			index++;
+			produtos[index] = produto;
+		}
 	}
 
 	/**
@@ -76,10 +83,11 @@ public class RepositorioProdutoPerecivelArray {
 	 * utilizado.
 	 */
 	public void atualizar(ProdutoPerecivel produto) {
-		if (existe(produto.getCodigo())) {
-			produtos[procurarIndice(produto.getCodigo())] = produto; // MINHA IMPLEMENTAÇÃO
+		int indice = procurarIndice(produto.getCodigo());
+		if (indice != -1) {
+			produtos[indice] = produto;
 		} else {
-			throw new IllegalArgumentException("Produto não está no array");
+			throw new RuntimeException();
 		}
 	}
 
@@ -91,7 +99,12 @@ public class RepositorioProdutoPerecivelArray {
 	 * @param codigo
 	 */
 	public void remover(int codigo) {
-		produtos[procurarIndice(codigo)] = null; // MINHA IMPLEMENTACAO
+		int indice = procurarIndice(codigo);
+		if (indice == -1) throw new RuntimeException();
+		for (int i = indice; i < index; i++) {
+			produtos[i] = produtos[i + 1];
+		}
+		produtos[index] = null;
 		index--;
 	}
 
@@ -103,10 +116,8 @@ public class RepositorioProdutoPerecivelArray {
 	 * @return
 	 */
 	public ProdutoPerecivel procurar(int codigo) {
-		if (existe(codigo)) {
-			return produtos[procurarIndice(codigo)];
-		} else {
-			throw new IllegalArgumentException("Produto não está no array");
-		}
+		int indice = procurarIndice(codigo);
+		if (indice == -1) throw new RuntimeException();
+		return produtos[indice];
 	}
 }

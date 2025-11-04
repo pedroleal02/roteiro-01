@@ -42,9 +42,11 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 */
 	private int procurarIndice(int codigo) {
 		int resultado = -1;
-		for (int i = 0; i < produtos.length; i++) {
-			if (produtos[i] == (Object) codigo) { // MINHA IMPLEMENTAÇÃO
+		boolean condicao = false;
+		for (int i = 0; i < produtos.length && !condicao; i++) {
+			if (produtos[i] != null && produtos[i].getCodigo() == codigo) {
 				resultado = i;
+				condicao = true;
 			}
 		}
 		return resultado;
@@ -58,8 +60,8 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 */
 	public boolean existe(int codigo) {
 		boolean condicao = false;
-		for (Object prod : produtos) { // MINHA IMPLEMENTACAO
-			if (prod == (Object) codigo) condicao = true;
+		for (int i = 0; i < produtos.length && !condicao; i++) {
+			if (produtos[i] != null && produtos[i].getCodigo() == codigo) condicao = true;
 		}
 		return condicao;
 	}
@@ -68,7 +70,9 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * Insere um novo produto (sem se preocupar com duplicatas)
 	 */
 	public void inserir(ProdutoNaoPerecivel produto) {
-		produtos[++index] = produto; // MINHA IMPLEMENTACAO 
+		if ((index+1) >= produtos.length) throw new RuntimeException();
+		index++;
+		produtos[index] = produto; 
 	}
 
 	/**
@@ -77,12 +81,11 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * utilizado.
 	 */
 	public void atualizar(ProdutoNaoPerecivel produto) {
-		if (!existe(produto.getCodigo())) {
-			throw new IllegalArgumentException("Produto não está no array"); // MINHA IMPLEMENTACAO
-		} else {
-			int indice = procurarIndice(produto.getCodigo());
-			produtos[indice] = produto;
+		int indice = procurarIndice(produto.getCodigo());
+		if (indice != -1) {
+			throw new RuntimeException(); 
 		}
+		produtos[indice] = produto;
 	}
 
 	/**
@@ -94,7 +97,14 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 */
 	public void remover(int codigo) {
 		int indice = procurarIndice(codigo);
-		produtos[indice--] = null; // MINHA IMPLEMENTAÇÃO
+		if (indice == -1) {
+			throw new RuntimeException();
+		}
+		for (int i = indice; i < index; i++) {
+			produtos[i] = produtos[i + 1];
+		}
+		produtos[index] = null;
+		index--;
 	}
 
 	/**
@@ -105,10 +115,17 @@ public class RepositorioProdutoNaoPerecivelArray {
 	 * @return
 	 */
 	public ProdutoNaoPerecivel procurar(int codigo) {
-		for (ProdutoNaoPerecivel produto : produtos) {
-			if (produto.getCodigo() == codigo) return produto;
+		ProdutoNaoPerecivel prod = null;
+		boolean condicao = false;
+
+		for (int i = 0; i < produtos.length && !condicao; i++) {
+			if (produtos[i] != null && produtos[i].getCodigo() == codigo) {
+				prod = produtos[i];
+				condicao = true;
+			}
 		}
-		throw new IllegalArgumentException("Poduto não está no array");
+		if (!condicao) throw new RuntimeException();
+		return prod;
 	}
 
 }
